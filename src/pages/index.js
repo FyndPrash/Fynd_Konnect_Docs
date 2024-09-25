@@ -19,8 +19,8 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/intro">
-            Fynd Konnect Platform
+            to="/docs/rest-apis">
+            Fynd Konnect Platform REST API's
           </Link>
         </div>
       </div>

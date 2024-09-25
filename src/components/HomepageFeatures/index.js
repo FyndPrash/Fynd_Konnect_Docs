@@ -4,32 +4,36 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'Marketplace',
+    Svg: require('@site/static/img/markett.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        The Marketplace serves as a dynamic platform where businesses can showcase their products
+        to a broader audience. It facilitates seamless interactions between sellers and buyers, 
+        allowing for a rich shopping experience.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'Supply',
+    Svg: require('@site/static/img/supply.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        The Supply system ensures that inventory levels are managed effectively to meet consumer 
+        demand. It integrates real-time data to streamline operations and maintain optimal stock 
+        levels.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: "REST API's",
+    Svg: require('@site/static/img/rest_api.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+       REST APIs (Representational State Transfer Application Programming Interfaces) provide a
+       standardized way for applications to communicate over the web. Our APIs are designed to
+       facilitate easy integration with third-party systems, enhancing functionality and user 
+       experience.
       </>
     ),
   },

@@ -8,8 +8,8 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'Fynd API Documentation',
+  tagline: "Comprehensive resources for integrating with Fynd's powerful API.",
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -69,77 +69,106 @@ const config = {
   ],
 
   themeConfig:
-    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-    ({
-      // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
-      navbar: {
-        style: 'dark',
-        logo: { alt: 'My Site Logo', src: 'img/image.png' },
-        items: [
-          {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
-            position: 'left',
-            label: 'Marketplace'
-          },
-          { to: '/blog', label: 'Supply', position: 'left' },
-          { to: '/docs/rest-api', label: "REST API's", position: 'left' }, // REST APIs link
-          { to: '/docs/faqs', label: 'FAQs', position: 'left' }, // FAQs link
-        ]
+/** @type {import('@docusaurus/preset-classic').ThemeConfig} */
+({
+  // Other configurations...
+  colorMode: {
+    disableSwitch: true, // Prevents the toggle from being shown
+    defaultMode: 'light', // Set to your desired default mode
+  },
+  navbar: {
+    style: 'dark',
+    logo: { alt: 'My Site Logo', src: 'img/image.png' },
+    items: [
+      {
+        type: 'docSidebar',
+        sidebarId: 'marketplaceSidebar',  // Link to the marketplace sidebar
+        position: 'left',
+        label: 'Marketplace',
       },
+      {
+        type: 'docSidebar',
+        sidebarId: 'supplySidebar',  // Link to the supply sidebar
+        position: 'left',
+        label: 'Supply',
+      },
+      { to: '/docs/blogs', label: 'Blogs', position: 'left' },
+      { to: '/docs/faqs', label: 'FAQs', position: 'left' },
+    ],
 
+
+  },
       
-
-
-
-
-
       footer: {
-        style: 'dark',
+        style: 'light',
         links: [
           {
-            title: 'Docs',
+            title: 'Company',
             items: [
-              {
-                label: 'Tutorial',
-                to: '/docs/intro',
-              },
+              { label: 'About Us', to: '/about-us' },
+              { label: 'Press', to: '/press' },
+              { label: 'Terms of Service', to: '/terms-of-service' },
+              { label: 'Privacy Policy', to: '/privacy-policy' },
+              { label: 'API License Terms', to: '/api-license-terms' },
             ],
           },
           {
-            title: 'Community',
+            title: 'Product & Services',
             items: [
-              {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
-              },
+              { label: 'Features', to: '/features' },
+              { label: 'Website Management', to: '/website-management' },
+              { label: 'SEO', to: '/seo' },
+              { label: 'StoreOS', to: '/storeos' },
+              { label: 'Extensions', to: '/extensions' },
+              { label: 'Fynd for Startups', to: '/fynd-for-startups' },
+              { label: 'Project Visionary', to: '/project-visionary' },
+              { label: 'Project Updates', to: '/project-updates' },
             ],
           },
           {
-            title: 'More',
+            title: 'Partners Community',
             items: [
-              {
-                label: 'Blog',
-                to: '/blog',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
-              },
+              { label: 'Fynd Platform Partners', to: '/fynd-platform-partners' },
+              { label: 'Partners Documentation', to: '/partners-documentation' },
+            ],
+          },
+          {
+            title: 'Customers',
+            items: [
+              { label: 'Brands on Fynd Platform', to: '/brands-on-fynd-platform' },
+              { label: 'Testimonials', to: '/testimonials' },
+              { label: 'FAQs', to: '/faqs' },
+              { label: 'Learn', to: '/learn' },
+            ],
+          },
+          {
+            title: 'Follow',
+            items: [
+              { label: 'Blog', to: '/blog' },
+              { label: 'Sell Online', to: '/sell-online' },
+              { label: 'Release Note', to: '/release-note' },
+              { label: 'LinkedIn', href: 'https://linkedin.com' },
+              { label: 'Instagram', href: 'https://instagram.com' },
+              { label: 'Facebook', href: 'https://facebook.com' },
+              { label: 'YouTube', href: 'https://youtube.com' },
+              { label: 'X (Twitter)', href: 'https://twitter.com' },
+              { label: 'Quora', href: 'https://quora.com' },
+            ],
+          },
+          {
+            title: 'Get Started Now',
+            items: [
+              { label: 'Login', to: '/login' },
+              { label: 'Sign Up', to: '/sign-up' },
+              { label: 'Book a Demo', to: '/book-a-demo' },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
-      },
+        copyright: `#MadeInIndia © 2022 Shopsense Retail Technologies`, },
+      
+
+
+      
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
