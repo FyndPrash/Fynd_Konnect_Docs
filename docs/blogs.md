@@ -10,7 +10,6 @@ tags:
   - trends
   - shopping
 ---
-
 ## Introduction
 
 The world of e-commerce is constantly evolving. In this post, we will explore some of the key trends that are shaping the future of online shopping and how businesses can adapt to these changes.
