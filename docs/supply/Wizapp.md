@@ -1,1 +1,1 @@
-# WIZAPP
+# Wizapp

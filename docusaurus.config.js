@@ -90,7 +90,7 @@ const config = {
         type: 'docSidebar',
         sidebarId: 'supplySidebar',  // Link to the supply sidebar
         position: 'left',
-        label: 'Supply',
+        label: 'ERP/POS',
       },
       { to: '/docs/blogs', label: 'Blogs', position: 'left' },
       { to: '/docs/faqs', label: 'FAQs', position: 'left' },

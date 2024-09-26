@@ -1,5 +1,5 @@
-
-# Ginesys | Fynd Integration
+![Ginesys](/img/ginesys_logo.jpg)
+# Ginesys 
 
 ## Scope of Integration
 

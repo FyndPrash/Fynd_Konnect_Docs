@@ -1,4 +1,4 @@
-# VINCULUM
+# Vinculum
 
 ## Scope of Integration
 
