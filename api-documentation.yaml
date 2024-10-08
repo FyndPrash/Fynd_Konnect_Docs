@@ -1,0 +1,730 @@
+openapi: 3.0.1
+info:
+  title: Fynd Konnect API v3
+  description: API for managing orders, shipments, inventory, and returns/RTOs.
+  version: 1.0.0
+servers:
+  - url: https://fyndkonnect.konnect.uat.fyndx1.de
+    description: Fynd Konnect API v3 Server
+
+tags:
+  - name: Authentication
+    description: API for generating access tokens
+  - name: Order Management
+    description: APIs for managing orders and shipments
+  - name: Inventory Management
+    description: APIs for managing inventory
+  - name: Return/RTO Management
+    description: APIs for managing returns and RTOs
+
+paths:
+  /aggregator/v1/token:
+    get:
+      tags:
+        - Authentication
+      summary: Generate Access Token
+      description: Generate access tokens for Company and Location level authorization.
+      parameters:
+        - name: username
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The x-integration-id
+        - name: password
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The x-integration-token
+      responses:
+        '200':
+          description: Access token generated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessTokenResponse'
+
+  /oms/v3/shipment:
+    get:
+      tags:
+        - Order Management
+      summary: GET Shipment By Status
+      description: Retrieve orders or shipments based on their current status.
+      parameters:
+        - $ref: '#/components/parameters/XAccessToken'
+        - $ref: '#/components/parameters/OrderingChannel'
+        - $ref: '#/components/parameters/OrderStatus'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/LocationCode'
+        - $ref: '#/components/parameters/OrderDateFrom'
+        - $ref: '#/components/parameters/OrderDateTo'
+        - name: orderId
+          in: query
+          schema:
+            type: string
+          description: Filter by order ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipmentResponse'
+
+  /oms/v3/shipment/{orderId}:
+    get:
+      tags:
+        - Order Management
+      summary: GET Shipment by Id
+      description: Retrieve a specific shipment by its order ID.
+      parameters:
+        - $ref: '#/components/parameters/XAccessToken'
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The order ID to retrieve
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipmentDetailResponse'
+
+  /oms/v3/shipment/cancel:
+    post:
+      tags:
+        - Order Management
+      summary: POST Order Cancellation
+      description: Cancel entire orders or individual items within an order prior to its confirmation.
+      parameters:
+        - $ref: '#/components/parameters/XAccessToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelOrderRequest'
+      responses:
+        '200':
+          description: Order cancellation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelOrderResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /oms/v3/shipment/confirm:
+    post:
+      tags:
+        - Order Management
+      summary: POST Order Confirmation
+      description: Confirm orders in bulk. Supports up to 100 orders per transaction.
+      parameters:
+        - $ref: '#/components/parameters/XAccessToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmOrderRequest'
+      responses:
+        '200':
+          description: Order confirmation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfirmOrderResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /oms/v3/shipment/invoiceUpdate:
+    post:
+      tags:
+        - Order Management
+      summary: Update Invoice ID
+      description: Update invoice IDs for orders. Supports bulk invoicing up to 100 orders per transaction.
+      parameters:
+        - $ref: '#/components/parameters/XAccessToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceUpdateRequest'
+      responses:
+        '200':
+          description: Invoice update successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceUpdateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /oms/v3/shipment/courierDetails:
+    post:
+      tags:
+        - Order Management
+      summary: Fetch Courier Details
+      description: Fetch courier details for given order IDs.
+      parameters:
+        - $ref: '#/components/parameters/XAccessToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourierDetailsRequest'
+      responses:
+        '200':
+          description: Courier details fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourierDetailsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /oms/v3/shipment/dispatch:
+    post:
+      tags:
+        - Order Management
+      summary: POST Order Dispatched
+      description: Mark orders as dispatched (handed over to delivery partner). Supports bulk dispatch up to 100 orders per transaction.
+      parameters:
+        - $ref: '#/components/parameters/XAccessToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DispatchOrderRequest'
+      responses:
+        '200':
+          description: Order dispatch successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DispatchOrderResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /ims/v3/inventory:
+    put:
+      tags:
+        - Inventory Management
+      summary: Update Inventory
+      description: Update the quantity (stock level) for your SKUs. Maximum data payload size per request is 500.
+      parameters:
+        - $ref: '#/components/parameters/XAccessToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInventoryRequest'
+      responses:
+        '200':
+          description: Inventory update successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateInventoryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /oms/v3/shipment/return:
+    get:
+      tags:
+        - Return/RTO Management
+      summary: GET Return Shipment
+      description: Get shipments with status 'return_delivered'. Includes orders returned by customer, shipment RTO, and shipments cancelled after invoicing before dispatch event.
+      parameters:
+        - $ref: '#/components/parameters/XAccessToken'
+        - $ref: '#/components/parameters/OrderingChannel'
+        - name: orderStatus
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [RETURN_DELIVERED]
+          description: Filter by order status (fixed to RETURN_DELIVERED)
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/LocationCode'
+        - $ref: '#/components/parameters/OrderDateFrom'
+        - $ref: '#/components/parameters/OrderDateTo'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnShipmentResponse'
+
+components:
+  parameters:
+    XAccessToken:
+      name: x-access-token
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Access token obtained from the authentication endpoint
+    OrderingChannel:
+      name: orderingChannel
+      in: query
+      schema:
+        type: string
+      description: Filter by ordering channel
+    OrderStatus:
+      name: orderStatus
+      in: query
+      schema:
+        type: string
+      description: Filter by order status
+    PageNumber:
+      name: pageNumber
+      in: query
+      schema:
+        type: integer
+      description: Page number for pagination
+    PageSize:
+      name: pageSize
+      in: query
+      schema:
+        type: integer
+      description: Number of items per page
+    LocationCode:
+      name: locationCode
+      in: query
+      schema:
+        type: string
+      description: Filter by location code
+    OrderDateFrom:
+      name: orderDateFrom
+      in: query
+      schema:
+        type: string
+        format: date
+      description: Start date for order filtering (YYYY-MM-DD)
+    OrderDateTo:
+      name: orderDateTo
+      in: query
+      schema:
+        type: string
+        format: date
+      description: End date for order filtering (YYYY-MM-DD)
+
+  schemas:
+    AccessTokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        status:
+          type: string
+          enum: [SUCCESS, FAILURE]
+
+    ShipmentResponse:
+      type: object
+      properties:
+        shipments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Shipment'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    ShipmentDetailResponse:
+      type: object
+      properties:
+        shipment:
+          $ref: '#/components/schemas/ShipmentDetail'
+
+    Shipment:
+      type: object
+      properties:
+        id:
+          type: string
+        orderStatus:
+          type: string
+        orderingChannel:
+          type: string
+        locationCode:
+          type: string
+        orderDate:
+          type: string
+          format: date-time
+        invoice_id:
+          type: string
+        credit_note_id:
+          type: string
+
+    ShipmentDetail:
+      type: object
+      properties:
+        id:
+          type: string
+        orderStatus:
+          type: string
+        orderingChannel:
+          type: string
+        locationCode:
+          type: string
+        orderDate:
+          type: string
+          format: date-time
+        invoice_id:
+          type: string
+        credit_note_id:
+          type: string
+        bags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bag'
+
+    Bag:
+      type: object
+      properties:
+        bagId:
+          type: string
+        status:
+          type: string
+
+    Pagination:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+        totalPages:
+          type: integer
+        pageSize:
+          type: integer
+        totalItems:
+          type: integer
+
+    CancelOrderRequest:
+      type: array
+      items:
+        type: object
+        properties:
+          orderId:
+            type: string
+          orderItems:
+            type: array
+            items:
+              type: object
+              properties:
+                orderItemId:
+                  type: string
+                quantity:
+                  type: integer
+                reasonCode:
+                  type: string
+
+    CancelOrderResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [SUCCESS, PARTIAL_SUCCESS, FAILURE]
+        message:
+          type: string
+        cancelledOrders:
+          type: array
+          items:
+            type: object
+            properties:
+              orderId:
+                type: string
+              status:
+                type: string
+              reason:
+                type: string
+
+    ConfirmOrderRequest:
+      type: array
+      items:
+        type: object
+        properties:
+          orderId:
+            type: string
+          orderItems:
+            type: array
+            items:
+              type: object
+              properties:
+                orderItemId:
+                  type: string
+                quantity:
+                  type: integer
+
+    ConfirmOrderResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [SUCCESS, PARTIAL_SUCCESS, FAILURE]
+        message:
+          type: string
+        confirmedOrders:
+          type: array
+          items:
+            type: object
+            properties:
+              orderId:
+                type: string
+              status:
+                type: string
+
+    InvoiceUpdateRequest:
+      type: array
+      items:
+        type: object
+        properties:
+          orderId:
+            type: string
+          invoiceNumber:
+            type: string
+          invoiceType:
+            type: string
+          invoiceQrCode:
+            type: string
+          irnNumber:
+            type: string
+          signedInvoice:
+            type: string
+          ackNumber:
+            type: string
+          ackDate:
+            type: string
+          orderItems:
+            type: array
+            items:
+              type: object
+              properties:
+                orderItemId:
+                  type: string
+                quantity:
+                  type: integer
+                imeiSerialNumber:
+                  type: array
+                  items:
+                    type: string
+          packages:
+            type: array
+            items:
+              type: object
+              properties:
+                packageId:
+                  type: string
+                packageLengthCm:
+                  type: string
+                packageWidthCm:
+                  type: string
+                packageHeightCm:
+                  type: string
+                packageWeightGms:
+                  type: string
+
+    InvoiceUpdateResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [SUCCESS, PARTIAL_SUCCESS, FAILURE]
+        message:
+          type: string
+        updatedInvoices:
+          type: array
+          items:
+            type: object
+            properties:
+              orderId:
+                type: string
+              invoiceNumber:
+                type: string
+              status:
+                type: string
+
+    CourierDetailsRequest:
+      type: array
+      items:
+        type: object
+        properties:
+          orderId:
+            type: string
+
+    CourierDetailsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [SUCCESS, PARTIAL_SUCCESS, FAILURE]
+        message:
+          type: string
+        courierDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              orderId:
+                type: string
+              courierName:
+                type: string
+              trackingNumber:
+                type: string
+
+    DispatchOrderRequest:
+      type: array
+      items:
+        type: object
+        properties:
+          orderId:
+            type: string
+          packageDetails:
+            type: array
+            items:
+              type: object
+              properties:
+                packageId:
+                  type: string
+                courierName:
+                  type: string
+                trackingNumber:
+                  type: string
+
+    DispatchOrderResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [SUCCESS, PARTIAL_SUCCESS, FAILURE]
+        message:
+          type: string
+        dispatchedOrders:
+          type: array
+          items:
+            type: object
+            properties:
+              orderId:
+                type: string
+              status:
+                type: string
+
+    UpdateInventoryRequest:
+      type: array
+      items:
+        type: object
+        properties:
+          sku:
+            type: string
+          quantity:
+            type: integer
+          location_id:
+            type: string
+
+    UpdateInventoryResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [SUCCESS, PARTIAL_SUCCESS, FAILURE]
+        message:
+          type: string
+        updatedItems:
+          type: array
+          items:
+            type: object
+            properties:
+              sku:
+                type: string
+              status:
+                type: string
+              message:
+                type: string
+
+    ReturnShipmentResponse:
+      type: object
+      properties:
+        shipments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReturnShipment'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    ReturnShipment:
+      type: object
+      properties:
+        id:
+          type: string
+        orderStatus:
+          type: string
+        orderingChannel:
+          type: string
+        locationCode:
+          type: string
+        orderDate:
+          type: string
+          format: date-time
+        forwardInvoice:
+          type: string
+        reasonCode:
+          type: string
+        reasonMessage:
+          type: string
+        originalShipmentId:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [FAILURE]
+        message:
+          type: string
+        errorCode:
+          type: string
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+security:
+  - BearerAuth: []
